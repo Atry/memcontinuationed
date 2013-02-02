@@ -140,6 +140,12 @@ object Memcontinuationed {
 
 }
 
+/** Connections to a memcached server cluster.
+  *
+  * @param group the channel group used to create socket to memcached server
+  * @param locator the function decide where the server is for specified key
+  * (you may implement ketama hashing here)
+  */
 final class Memcontinuationed(
   group: AsynchronousChannelGroup,
   locator: StorageAccessor[_] => SocketAddress) {
@@ -370,6 +376,12 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]) =
     getCommandRunner(locator(accessor))
 
+  /** Starts to shut down all connections to server and returns immediately.
+    *
+    * Later request to this `Memcontinuationed` will be rejected.
+    * All pending requests will not be terminated,
+    * and the responses for these requests will be handled as usual.
+    */
   final def shutdown() {
     runnerMapReference.getAndSet(new ShuttedDown).values foreach {
       _.shutDown(CleanUpCommand)
@@ -405,6 +417,13 @@ final class Memcontinuationed(
     }
   }
 
+  /** Send a `set` request to server.
+    *
+    * @param accessor the key sent to server.
+    * @param value the new value sent to server.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ExistsException])
   @throws(classOf[NotStoredException])
@@ -417,6 +436,13 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]): Unit @suspendable =
     store("set")(accessor, value, exptime)
 
+  /** Send an `add` request to server.
+    *
+    * @param accessor the key sent to server.
+    * @param value the new value sent to server.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ExistsException])
   @throws(classOf[NotStoredException])
@@ -429,6 +455,13 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]): Unit @suspendable =
     store("add")(accessor, value, exptime)
 
+  /** Send a `replace` request to server.
+    *
+    * @param accessor the key sent to server.
+    * @param value the new value sent to server.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ExistsException])
   @throws(classOf[NotStoredException])
@@ -441,6 +474,13 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]): Unit @suspendable =
     store("replace")(accessor, value, exptime)
 
+  /** Send an `append` request to server.
+    *
+    * @param accessor the key sent to server.
+    * @param value the data to be append.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ExistsException])
   @throws(classOf[NotStoredException])
@@ -453,6 +493,13 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]): Unit @suspendable =
     store("append")(accessor, value, exptime)
 
+  /** Send a `prepend` request to server.
+    *
+    * @param accessor the key sent to server.
+    * @param value the data to be prepend.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ExistsException])
   @throws(classOf[NotStoredException])
@@ -465,6 +512,11 @@ final class Memcontinuationed(
       implicit catcher: Catcher[Unit]): Unit @suspendable =
     store("prepend")(accessor, value, exptime)
 
+  /** An key/value pair that can be modified.
+    *
+    * @param origin the origin value before you modify it.
+    * @param accessor the key
+    */
   final class Mutable[Value] private[Memcontinuationed] (
     val accessor: StorageAccessor[Value],
     val origin: Value,
@@ -475,6 +527,14 @@ final class Memcontinuationed(
         ",value=" + origin +
         "casID=" + casID + ")"
 
+    /** Send a `cas` request to server.
+      *
+      * @param newValue the new value sent to server.
+      * @param exptime the expiration time sent to server.
+      * @param catcher the catcher to handle exceptions.
+      *
+      * @note If your `mutator` is not `@suspendable`, use [[#casUntilSuccess]] instead.
+      */
     @throws(classOf[ProtocolException])
     @throws(classOf[ExistsException])
     @throws(classOf[NotStoredException])
@@ -502,9 +562,9 @@ final class Memcontinuationed(
     }
 
     /**
-     * @param mutator 如果mutator的返回值和origin相等，
-     * 则不用存数据而直接成功
-     */
+      * @param mutator 如果mutator的返回值和origin相等，
+      * 则不用存数据而直接成功
+      */
     @throws(classOf[ProtocolException])
     @throws(classOf[NotStoredException])
     @throws(classOf[NotFoundException])
@@ -514,7 +574,7 @@ final class Memcontinuationed(
       exptime: Exptime = Exptime.NeverExpires)(
         continue: Unit => Unit)(
           implicit catcher: Catcher[Unit],
-          m: Manifest[Value]) {
+          valueManifest: Manifest[Value]) {
       reset {
         val newValue = mutator(origin)
         if (newValue != origin) {
@@ -543,6 +603,17 @@ final class Memcontinuationed(
       }
     }
 
+    /** Modifies the value and send [[#cas]] request to server.
+      *
+      * If the value is changed, retry.
+      *
+      * @param mutator the function that modifies the value.
+      * @param exptime the expiration time sent to server.
+      * @param catcher the catcher to handle exceptions.
+      * @param valueManifest the manifest for `Value`.
+      *
+      * @note If your `mutator` is not `@suspendable`, use [[#casUntilSuccess]] instead.
+      */
     @throws(classOf[ProtocolException])
     @throws(classOf[NotStoredException])
     @throws(classOf[NotFoundException])
@@ -551,16 +622,16 @@ final class Memcontinuationed(
       mutator: Value => Value @suspendable,
       exptime: Exptime = Exptime.NeverExpires)(
         implicit catcher: Catcher[Unit],
-        m: Manifest[Value]): Unit @suspendable = {
+        valueManifest: Manifest[Value]): Unit @suspendable = {
       shift { (continue: Unit => Unit) =>
         asyncContinuationizedCASUntilSuccess(mutator, exptime)(continue)
       }
     }
 
     /**
-     * @param mutator 如果mutator的返回值和origin相等，
-     * 则不用存数据而直接成功
-     */
+      * @param mutator 如果mutator的返回值和origin相等，
+      * 则不用存数据而直接成功
+      */
     @throws(classOf[ProtocolException])
     @throws(classOf[NotStoredException])
     @throws(classOf[NotFoundException])
@@ -570,7 +641,7 @@ final class Memcontinuationed(
       exptime: Exptime = Exptime.NeverExpires)(
         continue: Unit => Unit)(
           implicit catcher: Catcher[Unit],
-          m: Manifest[Value]) {
+          valueManifest: Manifest[Value]) {
       reset {
         val newValue = mutator(origin)
         if (newValue != origin) {
@@ -599,6 +670,17 @@ final class Memcontinuationed(
       }
     }
 
+    /** Modifies the value and send [[#cas]] request to server.
+      *
+      * If the value is changed, retry.
+      *
+      * @param mutator the function that modifies the value.
+      * @param exptime the expiration time sent to server.
+      * @param catcher the catcher to handle exceptions.
+      * @param valueManifest the manifest for `Value`.
+      *
+      * @note If your `mutator` is `@suspendable`, use [[#continuationizedCASUntilSuccess]] instead.
+      */
     @throws(classOf[ProtocolException])
     @throws(classOf[NotStoredException])
     @throws(classOf[NotFoundException])
@@ -607,13 +689,20 @@ final class Memcontinuationed(
       mutator: Value => Value,
       exptime: Exptime = Exptime.NeverExpires)(
         implicit catcher: Catcher[Unit],
-        m: Manifest[Value]): Unit @suspendable = {
+        valueManifest: Manifest[Value]): Unit @suspendable = {
       shift { (continue: Unit => Unit) =>
         asyncCASUntilSuccess(mutator, exptime)(continue)
       }
     }
   }
 
+  /** Send an `add` request to server, and if there is that key on server, send an `append` request instead.
+    *
+    * @param accessor the key sent to server.
+    * @param value the new value sent to server.
+    * @param exptime the expiration time sent to server.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ServerErrorException])
   final def addOrAppend[Value](
@@ -696,13 +785,18 @@ final class Memcontinuationed(
     }
   }
 
-  /**
-   * @return 服务器中找到的键值对，可能少于`allAccessors`请求的键。
-   */
+  /** Returns key/value pairs by `allAccessors` for update.
+    *
+    * If some requested keys does not exist, the returned pairs may be less than requested keys.
+    *
+    * @param allAccessors the requested keys.
+    * @param catcher the catcher to handle exceptions.
+    * @param valueManifest the manifest for `Value`.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ServerErrorException])
   final def gets[Value](allAccessors: StorageAccessor[Value]*)(
-    implicit catcher: Catcher[Unit], m: Manifest[Value]): Map[StorageAccessor[Value], Mutable[Value]] @suspendable = {
+    implicit catcher: Catcher[Unit], valueManifest: Manifest[Value]): Map[StorageAccessor[Value], Mutable[Value]] @suspendable = {
     val groupedAccessors = allAccessors.groupBy(locator)
     val results = groupedAccessors.asSuspendable.par map { entry =>
       val (address, accessors) = entry
@@ -725,15 +819,19 @@ final class Memcontinuationed(
     new GetsResult(sortedAccessors, results.toMap)
   }
 
-  /**
-   * 获取一个键值对以用于修改
-   * @note 如果需要检查数据是否存在，请使用[[com.dongxiguo.memcontinuationed.Memcontinuationed#gets]]
-   */
+  /** Returns one value by the `accessor` for update.
+    * 
+    * @param accessor the key sent to server
+    * @param valueManifest the manifest for `Value`.
+    * @throws com.dongxiguo.memcontinuationed.NotFoundException if the key does not exist
+    *
+    * @note If you need to fetch multiply values, use [[#gets]] instead.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ServerErrorException])
   @throws(classOf[NotFoundException])
   final def requireForCAS[Value](accessor: StorageAccessor[Value])(
-    implicit catcher: Catcher[Unit], m: Manifest[Value]): Mutable[Value] @suspendable = {
+    implicit catcher: Catcher[Unit], valueManifest: Manifest[Value]): Mutable[Value] @suspendable = {
     val address = locator(accessor)
     val commandRunner = getCommandRunner(address)
     shift { (continue: Mutable[Value] => Unit) =>
@@ -826,13 +924,18 @@ final class Memcontinuationed(
     }
   }
 
-  /**
-   * @return 服务器中找到的键值对，可能少于`allAccessors`请求的键。
-   */
+  /** Returns key/value pairs by `allAccessors`.
+    *
+    * If some requested keys does not exist, the returned pairs may be less than requested keys.
+    *
+    * @param allAccessors the requested keys.
+    * @param catcher the catcher to handle exceptions.
+    * @param valueManifest the manifest for `Value`.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ServerErrorException])
   final def get[Value](allAccessors: StorageAccessor[Value]*)(
-    implicit catcher: Catcher[Unit], m: Manifest[Value]): Map[StorageAccessor[Value], Value] @suspendable = {
+    implicit catcher: Catcher[Unit], valueManifest: Manifest[Value]): Map[StorageAccessor[Value], Value] @suspendable = {
     logger.finer("get")
     val groupedAccessors = allAccessors.groupBy(locator)
     val results = groupedAccessors.asSuspendable.par map { entry =>
@@ -858,15 +961,19 @@ final class Memcontinuationed(
     new GetResult(sortedAccessors, results.toMap)
   }
 
-  /**
-   * 获取一个键值对
-   * @note 如果需要检查数据是否存在，请使用[[com.dongxiguo.memcontinuationed.Memcontinuationed#gets]]
-   */
+  /** Returns one value by `accessor`.
+    *
+    * @param accessor the requested key.
+    * @param catcher the catcher to handle exceptions.
+    * @param valueManifest the manifest for `Value`.
+    * @throws com.dongxiguo.memcontinuationed.NotFoundException if the key does not exist.
+    * @note If you need to fetch more than one value, use [[#get]] instead.
+    */
   @throws(classOf[ProtocolException])
   @throws(classOf[ServerErrorException])
   @throws(classOf[NotFoundException])
   final def require[Value](accessor: StorageAccessor[Value])(
-    implicit catcher: Catcher[Unit], m: Manifest[Value]): Value @suspendable = {
+    implicit catcher: Catcher[Unit], valueManifest: Manifest[Value]): Value @suspendable = {
     logger.fine("REQUIRE " + accessor)
     val address = locator(accessor)
     val commandRunner = getCommandRunner(address)
@@ -910,6 +1017,11 @@ final class Memcontinuationed(
     }
   }
 
+  /** Send an `delete` request to server.
+    *
+    * @param accessor the key being deleted.
+    * @param catcher the catcher to handle exceptions.
+    */
   @throws(classOf[NotFoundException])
   @throws(classOf[ServerErrorException])
   @throws(classOf[ProtocolException])

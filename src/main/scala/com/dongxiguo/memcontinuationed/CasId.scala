@@ -16,4 +16,4 @@
 
 package com.dongxiguo.memcontinuationed
 
-final class CasId(val value: Long) extends AnyVal
+private final class CasId(val value: Long) extends AnyVal

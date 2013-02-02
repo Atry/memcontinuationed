@@ -353,7 +353,7 @@ private[memcontinuationed] object AsciiProtocol {
     val flags = accessor.getFlags(value)
     headWriter.write(flags.toString)
     headWriter.write(' ')
-    headWriter.write(exptime.value.toString)
+    headWriter.write(exptime.underlying.toString)
     headWriter.write(' ')
     val dataOutputStream = new ByteArrayOutputStream
     accessor.encode(dataOutputStream, value, flags)
@@ -412,7 +412,7 @@ private[memcontinuationed] object AsciiProtocol {
     val flags = accessor.getFlags(value)
     headWriter.write(flags.toString)
     headWriter.write(' ')
-    headWriter.write(exptime.value.toString)
+    headWriter.write(exptime.underlying.toString)
     headWriter.write(' ')
     val dataOutputStream = new ByteArrayOutputStream
     accessor.encode(dataOutputStream, value, flags)

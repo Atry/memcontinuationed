@@ -17,14 +17,37 @@
 package com.dongxiguo.memcontinuationed
 import java.io._
 
-trait StorageAccessor[A] {
+/** A memcached key.
+  *
+  * You should implement your own `StorageAccessor` for each type of value.
+  *
+  * @tparam Value the decoded value.
+  */
+trait StorageAccessor[Value] {
+
+  /** The underlying key sent to server */
   val key: String
 
-  def getFlags(data: A): Int = 0
+  /** Returns the flags for `data`, which will be sent to server.
+    *
+    * @param data the value
+    */
+  def getFlags(data: Value): Int = 0
 
-  def decode(input: InputStream, flags: Int): A
+  /** Returns the decoded value.
+    *
+    * @param input the byte stream to produce the value
+    * @param flags the flags for the value
+    */
+  def decode(input: InputStream, flags: Int): Value
 
-  def encode(output: OutputStream, data: A, flags: Int)
+  /** Encodes the value.
+    *
+    * @param output the byte stream the value writes to
+    * @param value the value to be encoded
+    * @param flags the flags for the value
+    */
+  def encode(output: OutputStream, value: Value, flags: Int)
 }
 
 // vim: set ts=2 sw=2 et:

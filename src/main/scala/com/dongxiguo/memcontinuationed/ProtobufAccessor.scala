@@ -18,15 +18,23 @@ package com.dongxiguo.memcontinuationed
 import java.io._
 import com.google.protobuf._
 
-trait ProtobufAccessor[A <: Message] extends StorageAccessor[A] {
-  def defaultInstance: A
+/** A key in [[https://code.google.com/p/protobuf/ Protocol Buffers]] format.
+  * 
+  * You should implement your own `ProtobufAccessor` for each type of value.
+  *
+  * @tparam Value the decoded value.
+  */
+trait ProtobufAccessor[Value <: Message] extends StorageAccessor[Value] {
 
-  def encode(output: OutputStream, data: A, flags: Int) {
+  /** The default instance of the value */
+  def defaultInstance: Value
+
+  def encode(output: OutputStream, data: Value, flags: Int) {
     data.writeTo(output)
   }
 
-  def decode(input: InputStream, flags: Int): A = {
-    defaultInstance.toBuilder.mergeFrom(input).build.asInstanceOf[A]
+  def decode(input: InputStream, flags: Int): Value = {
+    defaultInstance.toBuilder.mergeFrom(input).build.asInstanceOf[Value]
   }
 }
 
