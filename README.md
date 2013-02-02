@@ -92,7 +92,7 @@ There is something you need to know:
 
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
 
-    libraryDependencies += "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.0"
+    libraryDependencies += "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.1"
     
     libraryDependencies <+= scalaVersion { v =>
       compilerPlugin("org.scala-lang.plugins" % "continuations" % v)
@@ -102,7 +102,7 @@ Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
     
     scalaVersion := "2.10.0"
 
-See http://mvnrepository.com/artifact/com.dongxiguo/memcontinuationed_2.10/0.3.0 if you use [Maven](http://maven.apache.org/)
+See http://mvnrepository.com/artifact/com.dongxiguo/memcontinuationed_2.10/0.3.1 if you use [Maven](http://maven.apache.org/)
 or other build systems.
 
 ## Requirement
@@ -111,5 +111,5 @@ Memcontinuationed requires Scala 2.10.x and JRE 7.
 
 ## Links
 
-* [The API documentation](http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.0/memcontinuationed_2.10-0.3.0-javadoc.jar)
+* [The API documentation](http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.1/memcontinuationed_2.10-0.3.1-javadoc.jar)
 * [Coding examples](https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/dongxiguo/memcontinuationed)
