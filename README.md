@@ -97,6 +97,12 @@ Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/).
 
     libraryDependencies += "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.0"
     
+    libraryDependencies <+= scalaVersion { v =>
+      compilerPlugin("org.scala-lang.plugins" % "continuations" % v)
+    }
+    
+    scalacOptions += "-P:continuations:enable"
+    
     scalaVersion := "2.10.0"
 
 See http://mvnrepository.com/artifact/com.dongxiguo/memcontinuationed_2.10/0.3.0 if you use [Maven](http://maven.apache.org/)
