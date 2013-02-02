@@ -17,7 +17,7 @@ name := "memcontinuationed"
 
 organization := "com.dongxiguo"
 
-version := "0.3.1"
+version := "0.3.2-SNAPSHOT"
 
 libraryDependencies +=
   "com.novocode" % "junit-interface" % "0.7" % "test->default"
