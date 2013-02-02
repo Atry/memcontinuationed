@@ -82,7 +82,7 @@ you may need to creating a connection pool of `com.dongxiguo.memcontinuationed.M
       }
     }
 
-There is something you need to know.
+There is something you need to know:
 
 * `get`, `set`, and most of other methods in `Memcontinuationed` is `@suspendable`. You must invoke them in `reset` or in another `@suspendable` function you defined.
 * `get`, `set`, and most of other methods in `Memcontinuationed` accept an implicit parameter `Catcher`. You must use `Catcher` to handle exceptions from `@suspendable` functions, instead of `try`/`catcher`.
