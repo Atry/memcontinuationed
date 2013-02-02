@@ -18,7 +18,7 @@ package com.dongxiguo.memcontinuationed
 
 import java.util.Date
 
-final class Exptime(val value: Long) extends AnyVal
+final class Exptime private(val value: Long) extends AnyVal
 
 object Exptime {
 

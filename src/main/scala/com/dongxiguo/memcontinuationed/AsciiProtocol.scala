@@ -37,7 +37,7 @@ import com.dongxiguo.zeroLog.context.CurrentClass
 import com.dongxiguo.fastring.Fastring.Implicits._
 import com.dongxiguo.fastring.Fastring
 
-object AsciiProtocol {
+private[memcontinuationed] object AsciiProtocol {
 
   implicit private val (logger, formatter, appender) = ZeroLoggerFactory.newLogger(this)
 

@@ -30,9 +30,9 @@ import scala.util.continuations._
 import scala.collection.JavaConverters._
 import com.dongxiguo.fastring.Fastring.Implicits._
 
-/* private */ // Workaround for https://issues.scala-lang.org/browse/SI-6585
+private[memcontinuationed] // Workaround for https://issues.scala-lang.org/browse/SI-6585
 object Memcontinuationed {
-  implicit val (logger, formatter, appender) = ZeroLoggerFactory.newLogger(this)
+  private implicit val (logger, formatter, appender) = ZeroLoggerFactory.newLogger(this)
 
   private sealed abstract class Command
 
