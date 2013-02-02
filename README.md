@@ -95,7 +95,7 @@ See https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/don
 
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/).
 
-    libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.0"
+    libraryDependencies += "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.0"
     
     scalaVersion := "2.10.0"
 
