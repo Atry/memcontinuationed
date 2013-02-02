@@ -88,9 +88,6 @@ There is something you need to know:
 * `get`, `set`, and most of other methods in `Memcontinuationed` accept an implicit parameter `Catcher`. You must use `Catcher` to handle exceptions from `@suspendable` functions, instead of `try`/`catch`.
 * `MyKey` is the key you passed to server, which is a custom `StorageAccessor`. You should implement your own `StorageAccessor` for each type of data. If your value's format is [Protocol Buffers](http://code.google.com/p/protobuf/), you can use `com.dongxiguo.memcontinuationed.ProtobufAccessor` as your custom key's super class.
 
-The API documentation can be download at http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.0/memcontinuationed_2.10-0.3.0-javadoc.jar<wbr/>.
-See https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/dongxiguo/memcontinuationed for more example.
-
 ## Build configuration
 
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
@@ -111,3 +108,8 @@ or other build systems.
 ## Requirement
 
 Memcontinuationed requires Scala 2.10.x and JRE 7.
+
+## Links
+
+* [The API documentation](http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.0/memcontinuationed_2.10-0.3.0-javadoc.jar)
+* [Coding examples](https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/dongxiguo/memcontinuationed)
