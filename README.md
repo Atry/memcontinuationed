@@ -58,7 +58,7 @@ you may need to creating a connection pool of `com.dongxiguo.memcontinuationed.M
     
         reset {
           memcontinuationed.set(MyKey("hello"), "Hello, World!")
-          val result = memcontinuationed.get(MyKey("hello"))
+          val result = memcontinuationed.require(MyKey("hello"))
           assert(result == "Hello, World!")
           println(result)
           sys.exit()
