@@ -86,7 +86,7 @@ There is something you need to know:
 
 * `get`, `set`, and most of other methods in `Memcontinuationed` are `@suspendable`. You must invoke them in `reset` or in another `@suspendable` function you defined.
 * `get`, `set`, and most of other methods in `Memcontinuationed` accept an implicit parameter `Catcher`. You must use `Catcher` to handle exceptions from `@suspendable` functions, instead of `try`/`catcher`.
-* `MyKey` is the key you passed to server, which is a custom `StorageAccessor`. You should implement your own `StorageAccessor` for each type of data.
+* `MyKey` is the key you passed to server, which is a custom `StorageAccessor`. You should implement your own `StorageAccessor` for each type of data. If your value's format is [Protocol Buffers](http://code.google.com/p/protobuf/), you can use `com.dongxiguo.memcontinuationed.ProtobufAccessor` as your custom key's super class.
 
 The API documentation can be download at http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.0/memcontinuationed_2.10-0.3.0-javadoc.jar<wbr/>.
 See https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/dongxiguo/memcontinuationed for more example.
