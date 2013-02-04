@@ -11,7 +11,7 @@ on JVM, much faster than [spymemcached](https://code.google.com/p/spymemcached/)
 
 Memcontinuationed never blocks any threads. On the other hand, spymemcached does not block the IO thread but it does
 block the user's thread. All Memcontinuationed API are
-[suspendable](http://www.scala-lang.org/api/current/scala/util/continuations/package.html#suspendable=scala.util.continuations.package.cps%5BUnit%5D),
+[`@suspendable`](http://www.scala-lang.org/api/current/scala/util/continuations/package.html#suspendable=scala.util.continuations.package.cps%5BUnit%5D),
 which mean these methods can be invoked by a thread, and return to another thread.
 
 ### Reason 2. Optimization for huge number of IOPS
