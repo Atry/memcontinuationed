@@ -67,7 +67,7 @@ you may need to creating a connection pool of `com.dongxiguo.memcontinuationed.M
     }
     
     /**
-     * `MyKey` specifies how to serialize the data of key/value pair.
+     * `MyKey` specifies how to serialize the data of a key/value pair.
      */
     case class MyKey(override val key: String) extends StorageAccessor[String] {
     
