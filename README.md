@@ -1,8 +1,9 @@
 Memcontinuationed
 =================
 
-**Memcontinuationed** is an asynchronous memcached client for Scala. Memcontinuationed is the fastest memcached client
-on JVM, much faster than [spymemcached](https://code.google.com/p/spymemcached/) or
+**Memcontinuationed** is an asynchronous memcached client for [Scala](http://www.scala-lang.org/).
+Memcontinuationed is the fastest memcached client on JVM,
+much faster than [spymemcached](https://code.google.com/p/spymemcached/) or
 [Whalin's client](https://github.com/gwhalin/Memcached-Java-Client/wiki).
 
 ## Why is Memcontinuationed so fast?
