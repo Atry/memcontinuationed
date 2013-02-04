@@ -21,7 +21,7 @@ On the other hand, spymemcached sends all requests immediately, never waiting fo
 The spymemcached way consumes more CPU and more TCP overheads than Memcontinuationed.
 Even worse, the spymemcached way is not compatible with [some memcached server](http://wiki.open.qq.com/wiki/%E8%AE%BF%E9%97%AECMEM).
 
-Note: Because Memcontinuationed does not send requests until it receives previous reponse,
+Note: Because Memcontinuationed queues requests until it receives previous reponse,
 you may need to creating a connection pool of `com.dongxiguo.memcontinuationed.Memcontinuationed` to maximize the IOPS.
 
 ## A sample to use Memcontinuationed
