@@ -22,7 +22,7 @@ The spymemcached way consumes more CPU and more TCP overheads than Memcontinuati
 Even worse, the spymemcached way is not compatible with [some memcached server](http://wiki.open.qq.com/wiki/%E8%AE%BF%E9%97%AECMEM).
 
 Note: Because Memcontinuationed queues requests until all the previous response have been received,
-you may need to creating a connection pool of `com.dongxiguo.memcontinuationed.Memcontinuationed` to maximize the IOPS.
+you may need to create a connection pool of `com.dongxiguo.memcontinuationed.Memcontinuationed` to maximize the IOPS.
 
 ## A sample to use Memcontinuationed
 
