@@ -42,7 +42,7 @@ you may need to create a connection pool of `com.dongxiguo.memcontinuationed.Mem
         val threadPool = Executors.newCachedThreadPool()
         val channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool)
     
-        // The locator decide where the memcached server is.
+        // The locator determines where the memcached server is.
         // You may want to implement ketama hashing here.
         def locator(accessor: StorageAccessor[_]) = {
           new InetSocketAddress("localhost", 1978)
