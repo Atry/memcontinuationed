@@ -30,7 +30,7 @@ object Exptime {
   /** The expiration time that never be reached. */
   final val NeverExpires: Exptime = new Exptime(0L)
 
-  /** Returns a expiration time at `date`
+  /** Returns an expiration time at `date`
     *
     * @param date the expiration date
     */
@@ -42,7 +42,7 @@ object Exptime {
     new Exptime(result)
   }
 
-  /** Returns a expiration time at some number of seconds from now on
+  /** Returns an expiration time at some number of seconds from now on
     *
     * @param seconds the number of seconds from now on
     */
