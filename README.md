@@ -95,15 +95,29 @@ There is something you need to know:
 
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
 
-    libraryDependencies += "com.dongxiguo" % "memcontinuationed_2.10" % "0.3.1"
-    
-    libraryDependencies <+= scalaVersion { v =>
-      compilerPlugin("org.scala-lang.plugins" % "continuations" % v)
+    libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.2"
+        
+    libraryDependencies <++= scalaBinaryVersion { bv =>
+      bv match {
+        case "2.10" => {
+          Seq()
+        }
+        case _ => {
+          Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
+        }
+      }
     }
     
+    libraryDependencies <+= scalaVersion { sv =>
+      if (sv.startsWith("2.10.")) {
+        compilerPlugin("org.scala-lang.plugins" % "continuations" % sv)
+      } else {
+        compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
+      }
+    }
+
     scalacOptions += "-P:continuations:enable"
-    
-    scalaVersion := "2.10.0"
+
 
 See http://mvnrepository.com/artifact/com.dongxiguo/memcontinuationed_2.10/0.3.1 if you use [Maven](http://maven.apache.org/)
 or other build systems.
