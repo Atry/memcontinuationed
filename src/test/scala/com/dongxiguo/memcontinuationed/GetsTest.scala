@@ -40,9 +40,9 @@ class GetsTest {
       val executor = Executors.newFixedThreadPool(1)
       val channelGroup = AsynchronousChannelGroup.withThreadPool(executor)
       val memcontinuationed = new Memcontinuationed(channelGroup, TestServerAddress.getAddress _)
-      val accessor1 = new UTF8Accessor("memcontinuationed_get_test_got_1")
-      val accessor2 = new UTF8Accessor("memcontinuationed_get_test_got_2")
-      val accessor3 = new UTF8Accessor("memcontinuationed_get_test_got_3")
+      val accessor1 = new UTF8Accessor("memcontinuationed_gets_test_got_1")
+      val accessor2 = new UTF8Accessor("memcontinuationed_gets_test_got_2")
+      val accessor3 = new UTF8Accessor("memcontinuationed_gets_test_got_3")
 
       implicit def defaultCatcher: Catcher[Unit] = {
         case e: Exception =>

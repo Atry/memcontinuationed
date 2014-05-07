@@ -1,6 +1,8 @@
 Memcontinuationed
 =================
 
+[![Build Status](https://travis-ci.org/Atry/memcontinuationed.png?branch=master)](https://travis-ci.org/Atry/memcontinuationed)
+
 **Memcontinuationed** is an asynchronous memcached client for [Scala](http://www.scala-lang.org/).
 Memcontinuationed is the fastest memcached client on JVM,
 much faster than [spymemcached](https://code.google.com/p/spymemcached/) or

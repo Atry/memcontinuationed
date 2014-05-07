@@ -1,0 +1,14 @@
+language: scala
+
+scala:
+  - 2.10.0
+
+jdk:
+  - oraclejdk7
+  - openjdk7
+
+services:
+  - memcached
+
+before_script:
+  - sh src/test/resources/setup_travis.sh
