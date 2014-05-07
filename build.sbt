@@ -22,14 +22,12 @@ version := "0.3.3-SNAPSHOT"
 libraryDependencies +=
   "com.novocode" % "junit-interface" % "0.7" % "test->default"
 
-libraryDependencies <++= scalaBinaryVersion { bv =>
-  bv match {
-    case "2.10" => {
-      Seq()
-    }
-    case _ => {
-      Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
-    }
+libraryDependencies <++= scalaBinaryVersion {
+  case "2.10" => {
+    Seq()
+  }
+  case bv => {
+    Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
   }
 }
 
@@ -40,7 +38,6 @@ libraryDependencies <+= scalaVersion { sv =>
     compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
   }
 }
-
 
 // Make protobuf an optional library dependency
 libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.4.1" % Provided
