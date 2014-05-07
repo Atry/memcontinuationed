@@ -18,7 +18,6 @@ package com.dongxiguo.memcontinuationed
 
 import com.dongxiguo.zeroLog.Filter
 import com.dongxiguo.zeroLog.formatters.SimpleFormatter
-import scala.util.logging.ConsoleLogger
 import com.dongxiguo.zeroLog.appenders.ConsoleAppender
 
 object ZeroLoggerFactory {
