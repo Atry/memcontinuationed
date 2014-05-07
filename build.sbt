@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 深圳市葡萄藤网络科技有限公司 (Shenzhen Putaoteng Network Technology Co., Ltd.)
+ * Copyright 2013, 2014 深圳市葡萄藤网络科技有限公司 (Shenzhen Putaoteng Network Technology Co., Ltd.)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,34 @@ version := "0.3.2-SNAPSHOT"
 libraryDependencies +=
   "com.novocode" % "junit-interface" % "0.7" % "test->default"
 
-libraryDependencies <+= scalaVersion {v =>
-  compilerPlugin("org.scala-lang.plugins" % "continuations" % v)
+libraryDependencies <++= scalaBinaryVersion { bv =>
+  bv match {
+    case "2.10" => {
+      Seq()
+    }
+    case _ => {
+      Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
+    }
+  }
 }
 
-libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.4.1"
+libraryDependencies <+= scalaVersion { sv =>
+  if (sv.startsWith("2.10.")) {
+    compilerPlugin("org.scala-lang.plugins" % "continuations" % sv)
+  } else {
+    compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
+  }
+}
 
-libraryDependencies += "com.dongxiguo.zero-log" %% "context" % "0.3.3"
 
-libraryDependencies += "com.dongxiguo" %% "zero-log" % "0.3.3"
+// Make protobuf an optional library dependency
+libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.4.1" % Provided
 
-libraryDependencies += "com.dongxiguo" %% "commons-continuations" % "0.2.1"
+libraryDependencies += "com.dongxiguo.zero-log" %% "context" % "0.3.5"
+
+libraryDependencies += "com.dongxiguo" %% "zero-log" % "0.3.5"
+
+libraryDependencies += "com.dongxiguo" %% "commons-continuations" % "0.2.2"
 
 autoCompilerPlugins := true
 
@@ -42,13 +59,11 @@ scalacOptions += "-feature"
 
 scalacOptions += "-unchecked"
 
-scalacOptions += "-Xoldpatmat"
-
 scalacOptions += "-P:continuations:enable"
 
 scalacOptions ++= Seq("-Xelide-below", "FINEST")
 
-crossScalaVersions := Seq("2.10.0")
+crossScalaVersions := Seq("2.10.4", "2.11.0")
 
 publishTo <<= (isSnapshot) { isSnapshot: Boolean =>
   if (isSnapshot)

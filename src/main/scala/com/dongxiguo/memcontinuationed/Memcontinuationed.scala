@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 深圳市葡萄藤网络科技有限公司 (Shenzhen Putaoteng Network Technology Co., Ltd.)
+ * Copyright 2013,2014 深圳市葡萄藤网络科技有限公司 (Shenzhen Putaoteng Network Technology Co., Ltd.)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,8 @@ final class Memcontinuationed(
   locator: StorageAccessor[_] => SocketAddress) {
   import Memcontinuationed._
   
-  logger.fine("Creating Memcontinuationed...")
+  // Compile error in Scala 2.11.0, I don't know why.
+  // logger.fine("Creating Memcontinuationed...")
 
   private final class CommandRunner(address: SocketAddress)
     extends SequentialRunner[Command, CommandQueue] {
@@ -730,9 +731,9 @@ final class Memcontinuationed(
     allRequestedAccessors: Array[StorageAccessor[Value]],
     resultsByAddress: Map[SocketAddress, (Array[StorageAccessor[Value]], Array[Value], Array[CasId])])
     extends Map[StorageAccessor[Value], Mutable[Value]] {
-    logger.finest {
-      fast"Create new GetsResult $this"
-    }
+
+    // Compile error in Scala 2.11.0, I don't know why.
+    // logger.finest(fast"Create new GetsResult $this")
 
     override final def iterator = {
       import language.postfixOps
