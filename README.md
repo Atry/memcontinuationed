@@ -110,9 +110,9 @@ or other build systems.
 
 ## Requirement
 
-Memcontinuationed requires Scala 2.10.x and JRE 7.
+Memcontinuationed requires Scala 2.10.x or 2.11.x, and JRE 7.
 
 ## Links
 
-* [The API documentation](http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.10/0.3.1/memcontinuationed_2.10-0.3.1-javadoc.jar)
+* [The API documentation](http://central.maven.org/maven2/com/dongxiguo/memcontinuationed_2.11/0.3.2/memcontinuationed_2.11-0.3.2-javadoc.jar)
 * [Coding examples](https://github.com/Atry/memcontinuationed/tree/master/src/test/scala/com/dongxiguo/memcontinuationed)
