@@ -119,10 +119,7 @@ Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
     scalacOptions += "-P:continuations:enable"
 
 
-See http://mvnrepository.com/artifact/com.dongxiguo/memcontinuationed_2.10/0.3.1 if you use [Maven](http://maven.apache.org/)
-or other build systems.
-
-## Requirement
+### Requirement
 
 Memcontinuationed requires Scala 2.10.x or 2.11.x, and JRE 7.
 
