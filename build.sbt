@@ -27,7 +27,7 @@ libraryDependencies <++= scalaBinaryVersion {
     Seq()
   }
   case bv => {
-    Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.2")
+    Seq("org.scala-lang.plugins" % "scala-continuations-library_$bv" % "1.0.2")
   }
 }
 
@@ -35,7 +35,7 @@ libraryDependencies <+= scalaVersion { sv =>
   if (sv.startsWith("2.10.")) {
     compilerPlugin("org.scala-lang.plugins" % "continuations" % sv)
   } else {
-    compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
+    compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.2")
   }
 }
 
