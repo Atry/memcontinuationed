@@ -30,61 +30,61 @@ you may need to create a connection pool of `com.dongxiguo.memcontinuationed.Mem
 ## A sample to use Memcontinuationed
 
 ```scala
-    import com.dongxiguo.memcontinuationed.Memcontinuationed
-    import com.dongxiguo.memcontinuationed.StorageAccessor
-    import java.io._
-    import java.net._
-    import java.nio.channels.AsynchronousChannelGroup
-    import java.util.concurrent.Executors
-    import scala.util.continuations.reset
-    import scala.util.control.Exception.Catcher
-    
-    object Sample {
-    
-      def main(args: Array[String]) {
-        val threadPool = Executors.newCachedThreadPool()
-        val channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool)
-    
-        // The locator determines where the memcached server is.
-        // You may want to implement ketama hashing here.
-        def locator(accessor: StorageAccessor[_]) = {
-          new InetSocketAddress("localhost", 1978)
-        }
-    
-        val memcontinuationed = new Memcontinuationed(channelGroup, locator)
-    
-        // The error handler
-        implicit def catcher:Catcher[Unit] = {
-          case e: Exception =>
-            scala.Console.err.print(e)
-            sys.exit(-1)
-        }
-    
-        reset {
-          memcontinuationed.set(MyKey("hello"), "Hello, World!")
-          val result = memcontinuationed.require(MyKey("hello"))
-          assert(result == "Hello, World!")
-          println(result)
-          sys.exit()
-        }
-      }
+import com.dongxiguo.memcontinuationed.Memcontinuationed
+import com.dongxiguo.memcontinuationed.StorageAccessor
+import java.io._
+import java.net._
+import java.nio.channels.AsynchronousChannelGroup
+import java.util.concurrent.Executors
+import scala.util.continuations.reset
+import scala.util.control.Exception.Catcher
+
+object Sample {
+
+  def main(args: Array[String]) {
+    val threadPool = Executors.newCachedThreadPool()
+    val channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool)
+
+    // The locator determines where the memcached server is.
+    // You may want to implement ketama hashing here.
+    def locator(accessor: StorageAccessor[_]) = {
+      new InetSocketAddress("localhost", 1978)
     }
-    
-    /**
-     * `MyKey` specifies how to serialize the data of a key/value pair.
-     */
-    case class MyKey(override val key: String) extends StorageAccessor[String] {
-    
-      override def encode(output: OutputStream, data: String, flags: Int) {
-        output.write(data.getBytes("UTF-8"))
-      }
-    
-      override def decode(input: InputStream, flags: Int): String = {
-        val result = new Array[Byte](input.available)
-        input.read(result)
-        new String(result, "UTF-8")
-      }
+
+    val memcontinuationed = new Memcontinuationed(channelGroup, locator)
+
+    // The error handler
+    implicit def catcher:Catcher[Unit] = {
+      case e: Exception =>
+        scala.Console.err.print(e)
+        sys.exit(-1)
     }
+
+    reset {
+      memcontinuationed.set(MyKey("hello"), "Hello, World!")
+      val result = memcontinuationed.require(MyKey("hello"))
+      assert(result == "Hello, World!")
+      println(result)
+      sys.exit()
+    }
+  }
+}
+
+/**
+ * `MyKey` specifies how to serialize the data of a key/value pair.
+ */
+case class MyKey(override val key: String) extends StorageAccessor[String] {
+
+  override def encode(output: OutputStream, data: String, flags: Int) {
+    output.write(data.getBytes("UTF-8"))
+  }
+
+  override def decode(input: InputStream, flags: Int): String = {
+    val result = new Array[Byte](input.available)
+    input.read(result)
+    new String(result, "UTF-8")
+  }
+}
 ```
 
 There is something you need to know:
@@ -98,28 +98,28 @@ There is something you need to know:
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
 
 ```scala
-    libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.2"
-        
-    libraryDependencies <++= scalaBinaryVersion { bv =>
-      bv match {
-        case "2.10" => {
-          Seq()
-        }
-        case _ => {
-          Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
-        }
-      }
-    }
+libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.2"
     
-    libraryDependencies <+= scalaVersion { sv =>
-      if (sv.startsWith("2.10.")) {
-        compilerPlugin("org.scala-lang.plugins" % "continuations" % sv)
-      } else {
-        compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
-      }
+libraryDependencies <++= scalaBinaryVersion { bv =>
+  bv match {
+    case "2.10" => {
+      Seq()
     }
+    case _ => {
+      Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
+    }
+  }
+}
 
-    scalacOptions += "-P:continuations:enable"
+libraryDependencies <+= scalaVersion { sv =>
+  if (sv.startsWith("2.10.")) {
+    compilerPlugin("org.scala-lang.plugins" % "continuations" % sv)
+  } else {
+    compilerPlugin("org.scala-lang.plugins" % s"scala-continuations-plugin_$sv" % "1.0.1")
+  }
+}
+
+scalacOptions += "-P:continuations:enable"
 ```
 
 ### Requirement
