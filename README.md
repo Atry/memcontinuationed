@@ -29,6 +29,7 @@ you may need to create a connection pool of `com.dongxiguo.memcontinuationed.Mem
 
 ## A sample to use Memcontinuationed
 
+```scala
     import com.dongxiguo.memcontinuationed.Memcontinuationed
     import com.dongxiguo.memcontinuationed.StorageAccessor
     import java.io._
@@ -84,6 +85,7 @@ you may need to create a connection pool of `com.dongxiguo.memcontinuationed.Mem
         new String(result, "UTF-8")
       }
     }
+```
 
 There is something you need to know:
 
@@ -95,6 +97,7 @@ There is something you need to know:
 
 Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
 
+```scala
     libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.2"
         
     libraryDependencies <++= scalaBinaryVersion { bv =>
@@ -117,7 +120,7 @@ Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
     }
 
     scalacOptions += "-P:continuations:enable"
-
+```
 
 ### Requirement
 
