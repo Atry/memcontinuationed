@@ -19,8 +19,10 @@ organization := "com.dongxiguo"
 
 version := "0.3.3-SNAPSHOT"
 
-libraryDependencies +=
-  "com.novocode" % "junit-interface" % "0.7" % "test->default"
+libraryDependencies ++= Seq(
+  "com.novocode" % "junit-interface" % "0.7" % "test->default",
+  "com.typesafe" % "config" % "1.2.1" % "test"
+)
 
 libraryDependencies <++= scalaBinaryVersion {
   case "2.10" => {
