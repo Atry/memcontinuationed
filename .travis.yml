@@ -8,8 +8,10 @@ jdk:
   - oraclejdk7
   - openjdk7
 
+sudo: false
+
 services:
   - memcached
 
-before_script:
-  - sh src/test/resources/setup_travis.sh
+env:
+  - TEST_MEMCACHED_HOST=127.0.0.1 TEST_MEMCACHED_PORT=11211

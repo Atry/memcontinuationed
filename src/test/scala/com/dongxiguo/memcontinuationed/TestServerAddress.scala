@@ -17,13 +17,15 @@
 package com
 package dongxiguo
 package memcontinuationed
+import com.typesafe.config.ConfigFactory
 import java.net.InetSocketAddress
 
 object TestServerAddress {
+  private[this] lazy val conf = ConfigFactory.load("test")
 
   /**
    * 根据键确定数据在哪个服务器上
    */
   final def getAddress(accessor: StorageAccessor[_]) =
-    new InetSocketAddress("tt.btplug.dongxiguo.com", 1978)
+    new InetSocketAddress(conf.getString("memcontinuationed.memcached.host"), conf.getInt("memcontinuationed.memcached.port"))
 }
