@@ -100,15 +100,11 @@ Add these lines to your `build.sbt` if you use [Sbt](http://www.scala-sbt.org/):
 ```scala
 libraryDependencies += "com.dongxiguo" %% "memcontinuationed" % "0.3.2"
     
-libraryDependencies <++= scalaBinaryVersion { bv =>
-  bv match {
-    case "2.10" => {
-      Seq()
-    }
-    case _ => {
-      Seq("org.scala-lang.plugins" % s"scala-continuations-library_$bv" % "1.0.1")
-    }
-  }
+libraryDependencies <++= scalaBinaryVersion {
+  case "2.10" =>
+    Seq()
+  case _ =>
+    Seq("org.scala-lang.plugins" %% "scala-continuations-library" % "1.0.1")
 }
 
 libraryDependencies <+= scalaVersion { sv =>
